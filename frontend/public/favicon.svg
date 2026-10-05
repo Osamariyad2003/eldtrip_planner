@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="ELD Trip Planner">
+  <rect width="32" height="32" rx="6" fill="#1f4f82"/>
+  <!-- A four-row duty-status grid with a stepped line, as on the log sheet. -->
+  <g stroke="#ffffff" stroke-opacity="0.35" stroke-width="1">
+    <path d="M5 9h22M5 14h22M5 19h22M5 24h22"/>
+  </g>
+  <path d="M5 11.5h7v5h6v5h9" fill="none" stroke="#ffffff" stroke-width="2.4"
+        stroke-linejoin="round" stroke-linecap="round"/>
+</svg>

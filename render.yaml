@@ -1,0 +1,35 @@
+# DEP-04: the backend can be redeployed from scratch from this file.
+services:
+  - type: web
+    name: eld-trip-planner-api
+    runtime: python
+    plan: free
+    region: oregon
+    rootDir: backend
+    buildCommand: >-
+      pip install -r requirements.txt &&
+      python manage.py collectstatic --noinput &&
+      python manage.py migrate --run-syncdb &&
+      python manage.py createcachetable
+    startCommand: gunicorn config.wsgi:application --bind 0.0.0.0:$PORT --workers 2 --timeout 120
+    healthCheckPath: /api/health/
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12.7"
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: "False"
+      - key: ALLOWED_HOSTS
+        value: eld-trip-planner-api.onrender.com
+      - key: CORS_ALLOWED_ORIGINS
+        # Set to the deployed frontend origin, plus the local dev server (API-06).
+        value: http://localhost:5173
+      - key: ORS_API_KEY
+        sync: false
+      - key: NOMINATIM_USER_AGENT
+        sync: false
+      - key: APP_VERSION
+        value: "1.0.0"
+      - key: DATABASE_PATH
+        value: /tmp/cache.sqlite3

@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+*.sqlite3
+.coverage
+htmlcov/
+.pytest_cache/
+.hypothesis/
+.ruff_cache/
+backend/staticfiles/
+
+# Secrets — only .env.example is committed (DEP-01)
+.env
+.env.*
+!.env.example
+
+# Node
+node_modules/
+dist/
+*.local
+
+# Generated locally by npm run render:sheets
+frontend/sheet-output/
+frontend/scripts/dist/
+frontend/plan-sample.json
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
