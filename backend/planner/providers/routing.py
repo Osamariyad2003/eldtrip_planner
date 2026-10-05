@@ -156,6 +156,9 @@ def _ors_leg(start, end) -> RoutedLeg:
             headers={
                 "Authorization": settings.ORS_API_KEY,
                 "Content-Type": "application/json",
+                # The /geojson endpoint only serves geo+json; the default
+                # Accept of application/json is refused with a 406.
+                "Accept": "application/geo+json",
             },
             endpoint="v2/directions/driving-hgv",
         )

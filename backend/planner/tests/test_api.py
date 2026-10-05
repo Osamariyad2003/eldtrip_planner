@@ -457,3 +457,26 @@ def test_cycle_message_matches_the_requirement(client, value):
     )
     assert response.status_code == 400
     assert response.json()["error"]["fields"]["cycle_used_hr"] == "Enter 0-70 hours."
+
+
+@responses.activate
+def test_hgv_directions_request_accepts_geojson(client):
+    """The ORS /geojson endpoint refuses application/json with a 406.
+
+    Without the right Accept header every plan silently falls back to car
+    routing, so the header is pinned here.
+    """
+    mock_full_trip()
+    response = client.post(
+        reverse("plan"), data=json.dumps(plan_payload()), content_type="application/json"
+    )
+    assert response.status_code == 200, response.content
+    assert response.json()["summary"]["routing_provider"] == routing.PROVIDER_HGV
+
+    directions = [
+        call for call in responses.calls if call.request.url.startswith(routing.ORS_DIRECTIONS)
+    ]
+    assert directions, "expected the HGV directions endpoint to be called"
+    for call in directions:
+        assert call.request.headers["Accept"] == "application/geo+json"
+        assert call.request.headers["Authorization"] == "test-key"
