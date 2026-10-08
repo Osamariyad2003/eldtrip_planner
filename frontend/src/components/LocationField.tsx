@@ -30,12 +30,21 @@ export function LocationField({ label, hint, value, error, disabled, onChange }:
   const [open, setOpen] = useState(false)
   const [active, setActive] = useState(-1)
   const [status, setStatus] = useState<'idle' | 'loading' | 'empty' | 'failed'>('idle')
-  const justPicked = useRef(false)
+  // The last text this field put into the form itself. Anything else arriving
+  // in `value.label` came from somewhere the user was not typing - loading the
+  // sample trip, replaying a history entry, picking a suggestion - and must
+  // not pop a suggestion list open. Three lists opening at once on Load Sample
+  // is how the submit button ends up pushed off the panel.
+  const lastTyped = useRef(value.label)
   const boxRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    if (justPicked.current) {
-      justPicked.current = false
+    if (value.label !== lastTyped.current) {
+      lastTyped.current = value.label
+      setSuggestions([])
+      setStatus('idle')
+      setOpen(false)
+      setActive(-1)
       return
     }
     const query = value.label.trim()
@@ -53,6 +62,9 @@ export function LocationField({ label, hint, value, error, disabled, onChange }:
       setStatus('loading')
       try {
         const places = await geocode(query, controller.signal)
+        // A response that arrives after this effect was torn down belongs to an
+        // older query; dropping it keeps a slow "da" from overwriting "dallas".
+        if (controller.signal.aborted) return
         setSuggestions(places)
         setStatus(places.length ? 'idle' : 'empty')
         setOpen(true)
@@ -82,7 +94,6 @@ export function LocationField({ label, hint, value, error, disabled, onChange }:
   }, [open])
 
   const pick = (place: Place) => {
-    justPicked.current = true
     onChange({ label: place.label, lat: place.lat, lng: place.lng })
     setOpen(false)
     setSuggestions([])
@@ -133,7 +144,10 @@ export function LocationField({ label, hint, value, error, disabled, onChange }:
           disabled={disabled}
           value={value.label}
           placeholder="City, ST"
-          onChange={(event) => onChange({ label: event.target.value, lat: null, lng: null })}
+          onChange={(event) => {
+            lastTyped.current = event.target.value
+            onChange({ label: event.target.value, lat: null, lng: null })
+          }}
           onKeyDown={onKeyDown}
           onFocus={() => suggestions.length && setOpen(true)}
         />

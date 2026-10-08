@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import time
 
 from django.conf import settings
@@ -19,7 +20,10 @@ def enforce_rate_limit(request) -> None:
         return
     ip = _client_ip(request)
     window = int(time.time() // WINDOW_SECONDS)
-    key = f"rl:{ip}:{window}"
+    # X-Forwarded-For is client-controlled, so digest it rather than letting
+    # arbitrary bytes into the cache key.
+    digest = hashlib.sha1(ip.encode("utf-8")).hexdigest()[:16]
+    key = f"rl:{digest}:{window}"
     # add() only succeeds on the first call, which seeds the window's TTL.
     if cache.add(key, 1, WINDOW_SECONDS):
         return

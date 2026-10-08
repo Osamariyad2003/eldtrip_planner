@@ -34,11 +34,14 @@ jobs:
       - name: Lint
         run: ruff check .
 
+      # --fail-level WARNING: `check --deploy` exits 0 on warnings, so without
+      # it the gate printed security.W009 (weak SECRET_KEY) and passed anyway.
       - name: Django deployment checks
-        run: python manage.py check --deploy
+        run: python manage.py check --deploy --fail-level WARNING
         env:
           DJANGO_SETTINGS_MODULE: config.settings
-          SECRET_KEY: ci-only-secret-key-not-used-anywhere
+          # At least 50 characters, or security.W009 fails the step.
+          SECRET_KEY: ci-only-secret-key-not-used-for-anything-anywhere-ever
           DEBUG: 'False'
           ALLOWED_HOSTS: example.com
           CORS_ALLOWED_ORIGINS: https://example.com

@@ -34,12 +34,17 @@ class Instruction:
     text: str
     distance_mi: float
     duration_min: float
+    # Where the manoeuvre happens, so the UI can pan the map to a step.
+    lat: float | None = None
+    lng: float | None = None
 
     def as_dict(self) -> dict:
         return {
             "text": self.text,
             "distance_mi": round(self.distance_mi, 1),
             "duration_min": round(self.duration_min, 1),
+            "lat": round(self.lat, 6) if self.lat is not None else None,
+            "lng": round(self.lng, 6) if self.lng is not None else None,
         }
 
 
@@ -182,11 +187,16 @@ def _ors_leg(start, end) -> RoutedLeg:
     instructions: list[Instruction] = []
     for segment in (feature.get("properties") or {}).get("segments", []):
         for step in segment.get("steps", []):
+            # way_points indexes the unsimplified geometry; resolve it now so
+            # the coordinate survives later simplification (FR-RTE-04).
+            point = _point_at(coords, (step.get("way_points") or [None])[0])
             instructions.append(
                 Instruction(
                     text=step.get("instruction", ""),
                     distance_mi=float(step.get("distance", 0.0)),
                     duration_min=float(step.get("duration", 0.0)) / 60.0,
+                    lat=point[0] if point else None,
+                    lng=point[1] if point else None,
                 )
             )
 
@@ -226,11 +236,15 @@ def _osrm_leg(start, end) -> RoutedLeg:
             text = " ".join(
                 part for part in (manoeuvre.get("type"), manoeuvre.get("modifier"), name) if part
             ).strip()
+            # OSRM gives the manoeuvre point directly as [lng, lat].
+            location = manoeuvre.get("location") or []
             instructions.append(
                 Instruction(
                     text=(text or "Continue").capitalize(),
                     distance_mi=float(step.get("distance", 0.0)) / METRES_PER_MILE,
                     duration_min=float(step.get("duration", 0.0)) / 60.0,
+                    lat=float(location[1]) if len(location) >= 2 else None,
+                    lng=float(location[0]) if len(location) >= 2 else None,
                 )
             )
 
@@ -239,6 +253,16 @@ def _osrm_leg(start, end) -> RoutedLeg:
     if distance_mi > 0 and duration_hr <= 0:
         duration_hr = distance_mi / 55.0
     return RoutedLeg(from_label, to_label, distance_mi, duration_hr, geometry, instructions)
+
+
+def _point_at(coords: list, index) -> tuple[float, float] | None:
+    """(lat, lng) for a GeoJSON [lng, lat] coordinate index, if it is valid."""
+    if not isinstance(index, int) or not 0 <= index < len(coords):
+        return None
+    point = coords[index]
+    if len(point) < 2:
+        return None
+    return float(point[1]), float(point[0])
 
 
 def _same_point(lat1: float, lng1: float, lat2: float, lng2: float) -> bool:

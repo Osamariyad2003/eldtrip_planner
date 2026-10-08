@@ -1,0 +1,1260 @@
+{
+ "summary": {
+  "total_miles": 1001.0,
+  "driving_hours": 18.5,
+  "on_duty_hours": 3.5,
+  "trip_start": "2026-10-12T08:00:00-05:00",
+  "trip_end": "2026-10-13T16:30:00-05:00",
+  "total_elapsed_hours": 32.5,
+  "num_days": 2,
+  "num_fuel_stops": 1,
+  "num_rests": 1,
+  "num_restarts": 0,
+  "timezone": "America/Chicago",
+  "routing_provider": "openrouteservice-hgv"
+ },
+ "route": {
+  "geometry": [
+   [
+    32.7767,
+    -96.797
+   ],
+   [
+    32.84397,
+    -96.81498
+   ],
+   [
+    32.91125,
+    -96.83297
+   ],
+   [
+    32.97852,
+    -96.85095
+   ],
+   [
+    33.04579,
+    -96.86894
+   ],
+   [
+    33.11306,
+    -96.88692
+   ],
+   [
+    33.18033,
+    -96.90491
+   ],
+   [
+    33.24761,
+    -96.92289
+   ],
+   [
+    33.31488,
+    -96.94088
+   ],
+   [
+    33.38215,
+    -96.95887
+   ],
+   [
+    33.44942,
+    -96.97685
+   ],
+   [
+    33.5167,
+    -96.99483
+   ],
+   [
+    33.58397,
+    -97.01282
+   ],
+   [
+    33.65124,
+    -97.03081
+   ],
+   [
+    33.71851,
+    -97.04879
+   ],
+   [
+    33.78579,
+    -97.06678
+   ],
+   [
+    33.85306,
+    -97.08476
+   ],
+   [
+    33.92033,
+    -97.10274
+   ],
+   [
+    33.9876,
+    -97.12073
+   ],
+   [
+    34.05488,
+    -97.13872
+   ],
+   [
+    34.12215,
+    -97.1567
+   ],
+   [
+    34.18942,
+    -97.17468
+   ],
+   [
+    34.2567,
+    -97.19267
+   ],
+   [
+    34.32397,
+    -97.21066
+   ],
+   [
+    34.39124,
+    -97.22864
+   ],
+   [
+    34.45851,
+    -97.24662
+   ],
+   [
+    34.52578,
+    -97.26461
+   ],
+   [
+    34.59306,
+    -97.2826
+   ],
+   [
+    34.66033,
+    -97.30058
+   ],
+   [
+    34.7276,
+    -97.31857
+   ],
+   [
+    34.79487,
+    -97.33655
+   ],
+   [
+    34.86215,
+    -97.35453
+   ],
+   [
+    34.92942,
+    -97.37252
+   ],
+   [
+    34.99669,
+    -97.39051
+   ],
+   [
+    35.06396,
+    -97.40849
+   ],
+   [
+    35.13124,
+    -97.42648
+   ],
+   [
+    35.19851,
+    -97.44446
+   ],
+   [
+    35.26578,
+    -97.46245
+   ],
+   [
+    35.33305,
+    -97.48043
+   ],
+   [
+    35.40033,
+    -97.49842
+   ],
+   [
+    35.4676,
+    -97.5164
+   ],
+   [
+    35.62786,
+    -97.26924
+   ],
+   [
+    35.78813,
+    -97.02207
+   ],
+   [
+    35.94839,
+    -96.77491
+   ],
+   [
+    36.10865,
+    -96.52774
+   ],
+   [
+    36.26891,
+    -96.28057
+   ],
+   [
+    36.42918,
+    -96.03341
+   ],
+   [
+    36.58944,
+    -95.78625
+   ],
+   [
+    36.7497,
+    -95.53908
+   ],
+   [
+    36.90996,
+    -95.29192
+   ],
+   [
+    37.07023,
+    -95.04475
+   ],
+   [
+    37.23049,
+    -94.79758
+   ],
+   [
+    37.39075,
+    -94.55042
+   ],
+   [
+    37.55101,
+    -94.30326
+   ],
+   [
+    37.71128,
+    -94.05609
+   ],
+   [
+    37.87154,
+    -93.80893
+   ],
+   [
+    38.0318,
+    -93.56176
+   ],
+   [
+    38.19206,
+    -93.31459
+   ],
+   [
+    38.35233,
+    -93.06743
+   ],
+   [
+    38.51259,
+    -92.82027
+   ],
+   [
+    38.67285,
+    -92.5731
+   ],
+   [
+    38.83311,
+    -92.32594
+   ],
+   [
+    38.99338,
+    -92.07877
+   ],
+   [
+    39.15364,
+    -91.8316
+   ],
+   [
+    39.3139,
+    -91.58444
+   ],
+   [
+    39.47416,
+    -91.33728
+   ],
+   [
+    39.63443,
+    -91.09011
+   ],
+   [
+    39.79469,
+    -90.84295
+   ],
+   [
+    39.95495,
+    -90.59578
+   ],
+   [
+    40.11521,
+    -90.34862
+   ],
+   [
+    40.27548,
+    -90.10145
+   ],
+   [
+    40.43574,
+    -89.85429
+   ],
+   [
+    40.596,
+    -89.60712
+   ],
+   [
+    40.75626,
+    -89.35995
+   ],
+   [
+    40.91653,
+    -89.11279
+   ],
+   [
+    41.07679,
+    -88.86563
+   ],
+   [
+    41.23705,
+    -88.61846
+   ],
+   [
+    41.39731,
+    -88.3713
+   ],
+   [
+    41.55757,
+    -88.12413
+   ],
+   [
+    41.71784,
+    -87.87696
+   ],
+   [
+    41.8781,
+    -87.6298
+   ]
+  ],
+  "legs": [
+   {
+    "from_label": "Dallas, TX",
+    "to_label": "Oklahoma City, OK",
+    "distance_mi": 206.0,
+    "duration_hr": 3.96,
+    "geometry": [
+     [
+      32.7767,
+      -96.797
+     ],
+     [
+      32.84397,
+      -96.81498
+     ],
+     [
+      32.91125,
+      -96.83297
+     ],
+     [
+      32.97852,
+      -96.85095
+     ],
+     [
+      33.04579,
+      -96.86894
+     ],
+     [
+      33.11306,
+      -96.88692
+     ],
+     [
+      33.18033,
+      -96.90491
+     ],
+     [
+      33.24761,
+      -96.92289
+     ],
+     [
+      33.31488,
+      -96.94088
+     ],
+     [
+      33.38215,
+      -96.95887
+     ],
+     [
+      33.44942,
+      -96.97685
+     ],
+     [
+      33.5167,
+      -96.99483
+     ],
+     [
+      33.58397,
+      -97.01282
+     ],
+     [
+      33.65124,
+      -97.03081
+     ],
+     [
+      33.71851,
+      -97.04879
+     ],
+     [
+      33.78579,
+      -97.06678
+     ],
+     [
+      33.85306,
+      -97.08476
+     ],
+     [
+      33.92033,
+      -97.10274
+     ],
+     [
+      33.9876,
+      -97.12073
+     ],
+     [
+      34.05488,
+      -97.13872
+     ],
+     [
+      34.12215,
+      -97.1567
+     ],
+     [
+      34.18942,
+      -97.17468
+     ],
+     [
+      34.2567,
+      -97.19267
+     ],
+     [
+      34.32397,
+      -97.21066
+     ],
+     [
+      34.39124,
+      -97.22864
+     ],
+     [
+      34.45851,
+      -97.24662
+     ],
+     [
+      34.52578,
+      -97.26461
+     ],
+     [
+      34.59306,
+      -97.2826
+     ],
+     [
+      34.66033,
+      -97.30058
+     ],
+     [
+      34.7276,
+      -97.31857
+     ],
+     [
+      34.79487,
+      -97.33655
+     ],
+     [
+      34.86215,
+      -97.35453
+     ],
+     [
+      34.92942,
+      -97.37252
+     ],
+     [
+      34.99669,
+      -97.39051
+     ],
+     [
+      35.06396,
+      -97.40849
+     ],
+     [
+      35.13124,
+      -97.42648
+     ],
+     [
+      35.19851,
+      -97.44446
+     ],
+     [
+      35.26578,
+      -97.46245
+     ],
+     [
+      35.33305,
+      -97.48043
+     ],
+     [
+      35.40033,
+      -97.49842
+     ],
+     [
+      35.4676,
+      -97.5164
+     ]
+    ],
+    "instructions": [
+     {
+      "text": "Head north on I-35",
+      "distance_mi": 206.0,
+      "duration_min": 237.7,
+      "lat": null,
+      "lng": null
+     }
+    ]
+   },
+   {
+    "from_label": "Oklahoma City, OK",
+    "to_label": "Chicago, IL",
+    "distance_mi": 795.0,
+    "duration_hr": 14.45,
+    "geometry": [
+     [
+      35.4676,
+      -97.5164
+     ],
+     [
+      35.62786,
+      -97.26924
+     ],
+     [
+      35.78813,
+      -97.02207
+     ],
+     [
+      35.94839,
+      -96.77491
+     ],
+     [
+      36.10865,
+      -96.52774
+     ],
+     [
+      36.26891,
+      -96.28057
+     ],
+     [
+      36.42918,
+      -96.03341
+     ],
+     [
+      36.58944,
+      -95.78625
+     ],
+     [
+      36.7497,
+      -95.53908
+     ],
+     [
+      36.90996,
+      -95.29192
+     ],
+     [
+      37.07023,
+      -95.04475
+     ],
+     [
+      37.23049,
+      -94.79758
+     ],
+     [
+      37.39075,
+      -94.55042
+     ],
+     [
+      37.55101,
+      -94.30326
+     ],
+     [
+      37.71128,
+      -94.05609
+     ],
+     [
+      37.87154,
+      -93.80893
+     ],
+     [
+      38.0318,
+      -93.56176
+     ],
+     [
+      38.19206,
+      -93.31459
+     ],
+     [
+      38.35233,
+      -93.06743
+     ],
+     [
+      38.51259,
+      -92.82027
+     ],
+     [
+      38.67285,
+      -92.5731
+     ],
+     [
+      38.83311,
+      -92.32594
+     ],
+     [
+      38.99338,
+      -92.07877
+     ],
+     [
+      39.15364,
+      -91.8316
+     ],
+     [
+      39.3139,
+      -91.58444
+     ],
+     [
+      39.47416,
+      -91.33728
+     ],
+     [
+      39.63443,
+      -91.09011
+     ],
+     [
+      39.79469,
+      -90.84295
+     ],
+     [
+      39.95495,
+      -90.59578
+     ],
+     [
+      40.11521,
+      -90.34862
+     ],
+     [
+      40.27548,
+      -90.10145
+     ],
+     [
+      40.43574,
+      -89.85429
+     ],
+     [
+      40.596,
+      -89.60712
+     ],
+     [
+      40.75626,
+      -89.35995
+     ],
+     [
+      40.91653,
+      -89.11279
+     ],
+     [
+      41.07679,
+      -88.86563
+     ],
+     [
+      41.23705,
+      -88.61846
+     ],
+     [
+      41.39731,
+      -88.3713
+     ],
+     [
+      41.55757,
+      -88.12413
+     ],
+     [
+      41.71784,
+      -87.87696
+     ],
+     [
+      41.8781,
+      -87.6298
+     ]
+    ],
+    "instructions": [
+     {
+      "text": "Head north on I-35",
+      "distance_mi": 795.0,
+      "duration_min": 867.3,
+      "lat": null,
+      "lng": null
+     }
+    ]
+   }
+  ]
+ },
+ "stops": [
+  {
+   "status": "on_duty",
+   "kind": "pre_trip",
+   "start": "2026-10-12T08:00:00-05:00",
+   "end": "2026-10-12T08:30:00-05:00",
+   "duration_hr": 0.5,
+   "miles_start": 0.0,
+   "miles_end": 0.0,
+   "lat": 32.7767,
+   "lng": -96.797,
+   "location": "Joplin, MO",
+   "note": "Pre-trip inspection / TIV",
+   "miles_from_start": 0.0
+  },
+  {
+   "status": "on_duty",
+   "kind": "pickup",
+   "start": "2026-10-12T12:30:00-05:00",
+   "end": "2026-10-12T13:30:00-05:00",
+   "duration_hr": 1.0,
+   "miles_start": 206.0,
+   "miles_end": 206.0,
+   "lat": 35.4676,
+   "lng": -97.5164,
+   "location": "Springfield, MO",
+   "note": "Pickup - loading",
+   "miles_from_start": 206.0
+  },
+  {
+   "status": "off_duty",
+   "kind": "break",
+   "start": "2026-10-12T17:30:00-05:00",
+   "end": "2026-10-12T18:00:00-05:00",
+   "duration_hr": 0.5,
+   "miles_start": 426.0,
+   "miles_end": 426.0,
+   "lat": 37.208272,
+   "lng": -94.831847,
+   "location": "St. Louis, MO",
+   "note": "30-min break",
+   "miles_from_start": 426.0
+  },
+  {
+   "status": "sleeper_berth",
+   "kind": "rest_10",
+   "start": "2026-10-12T21:00:00-05:00",
+   "end": "2026-10-13T07:00:00-05:00",
+   "duration_hr": 10.0,
+   "miles_start": 591.0,
+   "miles_end": 591.0,
+   "lat": 38.529737,
+   "lng": -92.793816,
+   "location": "St. Louis, MO",
+   "note": "10-hr rest",
+   "miles_from_start": 591.0
+  },
+  {
+   "status": "on_duty",
+   "kind": "pre_trip",
+   "start": "2026-10-13T07:00:00-05:00",
+   "end": "2026-10-13T07:30:00-05:00",
+   "duration_hr": 0.5,
+   "miles_start": 591.0,
+   "miles_end": 591.0,
+   "lat": 38.529737,
+   "lng": -92.793816,
+   "location": "St. Louis, MO",
+   "note": "Pre-trip inspection / TIV",
+   "miles_from_start": 591.0
+  },
+  {
+   "status": "on_duty",
+   "kind": "fuel",
+   "start": "2026-10-13T14:45:00-05:00",
+   "end": "2026-10-13T15:15:00-05:00",
+   "duration_hr": 0.5,
+   "miles_start": 989.8,
+   "miles_end": 989.8,
+   "lat": 41.784942,
+   "lng": -87.773473,
+   "location": "St. Louis, MO",
+   "note": "Fuel",
+   "miles_from_start": 989.8
+  },
+  {
+   "status": "on_duty",
+   "kind": "dropoff",
+   "start": "2026-10-13T15:30:00-05:00",
+   "end": "2026-10-13T16:30:00-05:00",
+   "duration_hr": 1.0,
+   "miles_start": 1001.0,
+   "miles_end": 1001.0,
+   "lat": 41.8781,
+   "lng": -87.6298,
+   "location": "St. Louis, MO",
+   "note": "Dropoff - unloading",
+   "miles_from_start": 1001.0
+  }
+ ],
+ "events": [
+  {
+   "status": "on_duty",
+   "kind": "pre_trip",
+   "start": "2026-10-12T08:00:00-05:00",
+   "end": "2026-10-12T08:30:00-05:00",
+   "duration_hr": 0.5,
+   "miles_start": 0.0,
+   "miles_end": 0.0,
+   "lat": 32.7767,
+   "lng": -96.797,
+   "location": "Joplin, MO",
+   "note": "Pre-trip inspection / TIV"
+  },
+  {
+   "status": "driving",
+   "kind": "drive",
+   "start": "2026-10-12T08:30:00-05:00",
+   "end": "2026-10-12T12:30:00-05:00",
+   "duration_hr": 4.0,
+   "miles_start": 0.0,
+   "miles_end": 206.0,
+   "lat": 32.7767,
+   "lng": -96.797,
+   "location": "Joplin, MO",
+   "note": "Depart"
+  },
+  {
+   "status": "on_duty",
+   "kind": "pickup",
+   "start": "2026-10-12T12:30:00-05:00",
+   "end": "2026-10-12T13:30:00-05:00",
+   "duration_hr": 1.0,
+   "miles_start": 206.0,
+   "miles_end": 206.0,
+   "lat": 35.4676,
+   "lng": -97.5164,
+   "location": "Springfield, MO",
+   "note": "Pickup - loading"
+  },
+  {
+   "status": "driving",
+   "kind": "drive",
+   "start": "2026-10-12T13:30:00-05:00",
+   "end": "2026-10-12T17:30:00-05:00",
+   "duration_hr": 4.0,
+   "miles_start": 206.0,
+   "miles_end": 426.0,
+   "lat": 35.4676,
+   "lng": -97.5164,
+   "location": "Springfield, MO",
+   "note": "Depart"
+  },
+  {
+   "status": "off_duty",
+   "kind": "break",
+   "start": "2026-10-12T17:30:00-05:00",
+   "end": "2026-10-12T18:00:00-05:00",
+   "duration_hr": 0.5,
+   "miles_start": 426.0,
+   "miles_end": 426.0,
+   "lat": 37.208272,
+   "lng": -94.831847,
+   "location": "St. Louis, MO",
+   "note": "30-min break"
+  },
+  {
+   "status": "driving",
+   "kind": "drive",
+   "start": "2026-10-12T18:00:00-05:00",
+   "end": "2026-10-12T21:00:00-05:00",
+   "duration_hr": 3.0,
+   "miles_start": 426.0,
+   "miles_end": 591.0,
+   "lat": 37.208272,
+   "lng": -94.831847,
+   "location": "St. Louis, MO",
+   "note": "Depart"
+  },
+  {
+   "status": "sleeper_berth",
+   "kind": "rest_10",
+   "start": "2026-10-12T21:00:00-05:00",
+   "end": "2026-10-13T07:00:00-05:00",
+   "duration_hr": 10.0,
+   "miles_start": 591.0,
+   "miles_end": 591.0,
+   "lat": 38.529737,
+   "lng": -92.793816,
+   "location": "St. Louis, MO",
+   "note": "10-hr rest"
+  },
+  {
+   "status": "on_duty",
+   "kind": "pre_trip",
+   "start": "2026-10-13T07:00:00-05:00",
+   "end": "2026-10-13T07:30:00-05:00",
+   "duration_hr": 0.5,
+   "miles_start": 591.0,
+   "miles_end": 591.0,
+   "lat": 38.529737,
+   "lng": -92.793816,
+   "location": "St. Louis, MO",
+   "note": "Pre-trip inspection / TIV"
+  },
+  {
+   "status": "driving",
+   "kind": "drive",
+   "start": "2026-10-13T07:30:00-05:00",
+   "end": "2026-10-13T14:45:00-05:00",
+   "duration_hr": 7.25,
+   "miles_start": 591.0,
+   "miles_end": 989.8,
+   "lat": 38.529737,
+   "lng": -92.793816,
+   "location": "St. Louis, MO",
+   "note": "Depart"
+  },
+  {
+   "status": "on_duty",
+   "kind": "fuel",
+   "start": "2026-10-13T14:45:00-05:00",
+   "end": "2026-10-13T15:15:00-05:00",
+   "duration_hr": 0.5,
+   "miles_start": 989.8,
+   "miles_end": 989.8,
+   "lat": 41.784942,
+   "lng": -87.773473,
+   "location": "St. Louis, MO",
+   "note": "Fuel"
+  },
+  {
+   "status": "driving",
+   "kind": "drive",
+   "start": "2026-10-13T15:15:00-05:00",
+   "end": "2026-10-13T15:30:00-05:00",
+   "duration_hr": 0.25,
+   "miles_start": 989.8,
+   "miles_end": 1001.0,
+   "lat": 41.784942,
+   "lng": -87.773473,
+   "location": "St. Louis, MO",
+   "note": "Depart"
+  },
+  {
+   "status": "on_duty",
+   "kind": "dropoff",
+   "start": "2026-10-13T15:30:00-05:00",
+   "end": "2026-10-13T16:30:00-05:00",
+   "duration_hr": 1.0,
+   "miles_start": 1001.0,
+   "miles_end": 1001.0,
+   "lat": 41.8781,
+   "lng": -87.6298,
+   "location": "St. Louis, MO",
+   "note": "Dropoff - unloading"
+  },
+  {
+   "status": "off_duty",
+   "kind": "off",
+   "start": "2026-10-13T16:30:00-05:00",
+   "end": "2026-10-14T00:00:00-05:00",
+   "duration_hr": 7.5,
+   "miles_start": 1001.0,
+   "miles_end": 1001.0,
+   "lat": 41.8781,
+   "lng": -87.6298,
+   "location": "St. Louis, MO",
+   "note": "Off duty"
+  }
+ ],
+ "daily_logs": [
+  {
+   "date": "2026-10-12",
+   "day_index": 0,
+   "miles_today": 591.0,
+   "header": {
+    "driver": "J. Rivera",
+    "co_driver": "N/A",
+    "carrier": "Spotter Freight Systems, LLC",
+    "main_office": "Joplin, MO",
+    "home_terminal": "Joplin, MO",
+    "vehicle": "Tractor 4821 / Trailer 91077 (TX)",
+    "shipper": "Midwest Grain Co.",
+    "commodity": "Palletized dry goods",
+    "shipping_document": "BOL-7C087D",
+    "from_label": "Joplin, MO",
+    "to_label": "St. Louis, MO",
+    "pickup_label": "Springfield, MO",
+    "date": "2026-10-12",
+    "miles_today": 591.0,
+    "total_miles_today": 591.0
+   },
+   "segments": [
+    {
+     "status": "off_duty",
+     "start_min": 0,
+     "end_min": 480,
+     "kind": "off"
+    },
+    {
+     "status": "on_duty",
+     "start_min": 480,
+     "end_min": 510,
+     "kind": "pre_trip"
+    },
+    {
+     "status": "driving",
+     "start_min": 510,
+     "end_min": 750,
+     "kind": "drive"
+    },
+    {
+     "status": "on_duty",
+     "start_min": 750,
+     "end_min": 810,
+     "kind": "pickup"
+    },
+    {
+     "status": "driving",
+     "start_min": 810,
+     "end_min": 1050,
+     "kind": "drive"
+    },
+    {
+     "status": "off_duty",
+     "start_min": 1050,
+     "end_min": 1080,
+     "kind": "break"
+    },
+    {
+     "status": "driving",
+     "start_min": 1080,
+     "end_min": 1260,
+     "kind": "drive"
+    },
+    {
+     "status": "sleeper_berth",
+     "start_min": 1260,
+     "end_min": 1440,
+     "kind": "rest_10"
+    }
+   ],
+   "totals": {
+    "off_duty": 8.5,
+    "sleeper_berth": 3.0,
+    "driving": 11.0,
+    "on_duty": 1.5
+   },
+   "remarks": [
+    {
+     "minute": 480,
+     "location": "Joplin, MO",
+     "note": "Pre-trip inspection / TIV"
+    },
+    {
+     "minute": 510,
+     "location": "Joplin, MO",
+     "note": "Depart"
+    },
+    {
+     "minute": 750,
+     "location": "Springfield, MO",
+     "note": "Pickup - loading"
+    },
+    {
+     "minute": 810,
+     "location": "Springfield, MO",
+     "note": "Depart"
+    },
+    {
+     "minute": 1050,
+     "location": "St. Louis, MO",
+     "note": "30-min break"
+    },
+    {
+     "minute": 1080,
+     "location": "St. Louis, MO",
+     "note": "Depart"
+    },
+    {
+     "minute": 1260,
+     "location": "St. Louis, MO",
+     "note": "10-hr rest"
+    }
+   ],
+   "brackets": [
+    {
+     "start_min": 0,
+     "end_min": 510
+    },
+    {
+     "start_min": 750,
+     "end_min": 810
+    },
+    {
+     "start_min": 1050,
+     "end_min": 1080
+    },
+    {
+     "start_min": 1260,
+     "end_min": 1440
+    }
+   ],
+   "recap": {
+    "on_duty_today": 12.5,
+    "total_last_8_days": 35.0,
+    "available_tomorrow": 35.0,
+    "restart_taken": false
+   }
+  },
+  {
+   "date": "2026-10-13",
+   "day_index": 1,
+   "miles_today": 410.0,
+   "header": {
+    "driver": "J. Rivera",
+    "co_driver": "N/A",
+    "carrier": "Spotter Freight Systems, LLC",
+    "main_office": "Joplin, MO",
+    "home_terminal": "Joplin, MO",
+    "vehicle": "Tractor 4821 / Trailer 91077 (TX)",
+    "shipper": "Midwest Grain Co.",
+    "commodity": "Palletized dry goods",
+    "shipping_document": "BOL-7C087D",
+    "from_label": "St. Louis, MO",
+    "to_label": "St. Louis, MO",
+    "pickup_label": "Springfield, MO",
+    "date": "2026-10-13",
+    "miles_today": 410.0,
+    "total_miles_today": 410.0
+   },
+   "segments": [
+    {
+     "status": "sleeper_berth",
+     "start_min": 0,
+     "end_min": 420,
+     "kind": "rest_10"
+    },
+    {
+     "status": "on_duty",
+     "start_min": 420,
+     "end_min": 450,
+     "kind": "pre_trip"
+    },
+    {
+     "status": "driving",
+     "start_min": 450,
+     "end_min": 885,
+     "kind": "drive"
+    },
+    {
+     "status": "on_duty",
+     "start_min": 885,
+     "end_min": 915,
+     "kind": "fuel"
+    },
+    {
+     "status": "driving",
+     "start_min": 915,
+     "end_min": 930,
+     "kind": "drive"
+    },
+    {
+     "status": "on_duty",
+     "start_min": 930,
+     "end_min": 990,
+     "kind": "dropoff"
+    },
+    {
+     "status": "off_duty",
+     "start_min": 990,
+     "end_min": 1440,
+     "kind": "off"
+    }
+   ],
+   "totals": {
+    "off_duty": 7.5,
+    "sleeper_berth": 7.0,
+    "driving": 7.5,
+    "on_duty": 2.0
+   },
+   "remarks": [
+    {
+     "minute": 0,
+     "location": "St. Louis, MO",
+     "note": "10-hr rest"
+    },
+    {
+     "minute": 420,
+     "location": "St. Louis, MO",
+     "note": "Pre-trip inspection / TIV"
+    },
+    {
+     "minute": 450,
+     "location": "St. Louis, MO",
+     "note": "Depart"
+    },
+    {
+     "minute": 885,
+     "location": "St. Louis, MO",
+     "note": "Fuel"
+    },
+    {
+     "minute": 915,
+     "location": "St. Louis, MO",
+     "note": "Depart"
+    },
+    {
+     "minute": 930,
+     "location": "St. Louis, MO",
+     "note": "Dropoff - unloading"
+    },
+    {
+     "minute": 990,
+     "location": "St. Louis, MO",
+     "note": "Off duty"
+    }
+   ],
+   "brackets": [
+    {
+     "start_min": 0,
+     "end_min": 450
+    },
+    {
+     "start_min": 885,
+     "end_min": 915
+    },
+    {
+     "start_min": 930,
+     "end_min": 1440
+    }
+   ],
+   "recap": {
+    "on_duty_today": 9.5,
+    "total_last_8_days": 44.5,
+    "available_tomorrow": 25.5,
+    "restart_taken": false
+   }
+  }
+ ],
+ "notices": [
+  "Car routing used; truck times may differ.",
+  "Some stop locations are shown as coordinates; place names were unavailable."
+ ],
+ "assumptions": [
+  "Pickup and dropoff are 60 minutes on duty each (BR-PLN-02).",
+  "Pre-trip inspection is 30 minutes at trip start and after every 10-hour rest or 34-hour restart (BR-PLN-02).",
+  "The driver starts fresh, with at least 10 hours off before the start. Cycle used stays fixed during the trip except for a 34-hour restart; no hours roll off (BR-PLN-03).",
+  "Logs use the time zone of the current location. 10-hour rests are logged sleeper berth; 30-minute breaks, 34-hour restarts and time outside the trip are logged off duty (BR-PLN-06).",
+  "Fuel stop at least every 1,000 miles, 30 minutes on duty (BR-PLN-01)."
+ ]
+}

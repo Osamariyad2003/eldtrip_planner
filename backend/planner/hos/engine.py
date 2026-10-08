@@ -14,7 +14,7 @@ by the precedence in BR-PLN-04.
 
 from __future__ import annotations
 
-from datetime import datetime, timedelta
+from datetime import UTC, datetime, timedelta
 
 from .config import DEFAULT_CONFIG, HosConfig
 from .geometry import LegGeometry
@@ -95,6 +95,20 @@ class _Engine:
 
     # -- event emission -------------------------------------------------
 
+    def _at(self, minutes: int) -> datetime:
+        """The local time ``minutes`` of real elapsed time into the trip.
+
+        BR-HOS-05/06 are durations a clock measures, not positions on a wall
+        calendar: a 10-hour rest is ten hours wherever it falls. Adding a
+        timedelta straight to a zone-aware datetime does wall-clock arithmetic
+        instead, so a rest spanning a daylight-saving change came out as nine
+        or eleven real hours and the driver was shown as rested when they were
+        not. Doing the addition in UTC and converting back keeps the duration
+        honest and lets the local time shift, which is what actually happens.
+        """
+        absolute = self.start.astimezone(UTC) + timedelta(minutes=minutes)
+        return absolute.astimezone(self.start.tzinfo)
+
     def _emit(self, status: str, kind: str, minutes: int, miles: float = 0.0) -> None:
         if minutes <= 0:
             return
@@ -115,8 +129,8 @@ class _Engine:
             DutyEvent(
                 status=status,
                 kind=kind,
-                start=self.start + timedelta(minutes=start_min),
-                end=self.start + timedelta(minutes=end_min),
+                start=self._at(start_min),
+                end=self._at(end_min),
                 start_min=start_min,
                 end_min=end_min,
                 miles_start=miles_start,

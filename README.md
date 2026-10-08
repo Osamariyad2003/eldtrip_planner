@@ -15,6 +15,33 @@ logic that implements them.
 
 ---
 
+## What it looks like
+
+A trip is entered on the left; the route, the stops the Hours of Service rules
+forced, and the day's log sheets come back on the right.
+
+![The route map, with every HOS stop on it and the milestones drawer below](docs/screenshots/map.png)
+
+Each stop is one the rules required — a 30-minute break at the eighth driving
+hour, a fuel stop inside 1,000 miles, a 10-hour rest — and the drawer lists them
+with the clock times and mileages they happen at. Anything the planner had to
+work around, such as falling back to car routing when the truck profile is
+unavailable, is stated above the map rather than left for the user to notice.
+
+![A day's drawn log sheet on the standard DOT form](docs/screenshots/logs.png)
+
+The log sheet is the pre-printed "Driver's Daily Log" form, drawn as vector SVG:
+the 24-hour grid with quarter-hour ticks, the continuous duty line, remarks at
+every status change, and the 70-hour/8-day recap. The same markup serves the
+screen, the printer and the PDF export.
+
+![Turn-by-turn directions per leg in the drawer](docs/screenshots/directions.png)
+
+Screenshots are produced by `npm run screenshots` (see below) from a recorded
+plan, so they stay current without a provider key.
+
+---
+
 ## Setup
 
 Five commands from a fresh clone (NFR-MNT-03):
@@ -99,10 +126,12 @@ the AC-01 fixture.
 
 `frontend/src/components/LogSheet.tsx` draws the FMCSA form as SVG on a
 US-Letter-landscape viewBox (1056 × 816 at 96 dpi), so the same markup serves
-the screen, the printer and the PDF with no rescaling. It renders the four-row
-grid with quarter-hour ticks, one continuous stepped duty line, the totals
-column with the circled driving-plus-on-duty figure, 45° remark flags staggered
-so crowded labels cannot overlap, stationary brackets, and the 70-hour recap.
+the screen, the printer and the PDF with no rescaling. It follows the printed
+paper form: the title block with month/day/year blanks, From/To, the mileage,
+carrier, office and terminal boxes, the black-banded four-row grid with
+quarter-hour ticks and a Total Hours column, one continuous stepped duty line,
+place names written vertically under the grid, stationary brackets, the remarks
+and shipping-document areas, and the 70-hour/8-day & 60-hour/7-day recap.
 
 Each sheet carries an SVG `<desc>` listing the day's segments and totals, so it
 is readable by a screen reader (NFR-ACC-02).
@@ -180,6 +209,26 @@ npm run render:sheets -- plan.json sheet-output   # plan.json = an API-01 respon
 This renders each day's log sheet to a standalone `.svg` file, which is handy
 for checking grid geometry and flag placement directly.
 
+### Screenshotting the app without a backend
+
+```bash
+cd frontend
+npm run screenshots                     # every view -> frontend/screenshots/
+npm run screenshots -- --view logs      # just one
+npm run screenshots -- --width 900      # a narrower viewport
+npm run screenshots -- --url https://…  # a live deployment's landing page
+```
+
+The script builds the app against a same-origin API, serves `dist/` and a
+recorded plan (`scripts/fixtures/plan.json`) from one tiny server, then drives
+headless Chrome or Edge through the UI — load the sample, submit it, open a
+tab — and captures `empty`, `map`, `directions` and `logs`. No provider key, no
+network and nothing to install; point `SCREENSHOT_BROWSER` at a binary if
+neither browser is found automatically.
+
+The fixture is a recording, so the screenshots show the UI, not the planner.
+Replace it with any real API-01 response to screenshot a different trip.
+
 ---
 
 ## Deployment
@@ -242,7 +291,7 @@ and non-US trips.
 
 ## Attribution
 
-Map data © [OpenStreetMap](https://www.openstreetmap.org/copyright)
-contributors · tiles © [CARTO](https://carto.com/attributions) · routing and
+Map data and tiles © [OpenStreetMap](https://www.openstreetmap.org/copyright)
+contributors · routing and
 geocoding by [OpenRouteService](https://openrouteservice.org/) · time zones via
 [`timezonefinder`](https://github.com/jannikmi/timezonefinder).

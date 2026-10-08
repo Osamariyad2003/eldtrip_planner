@@ -9,7 +9,8 @@
     "preview": "vite preview",
     "lint": "oxlint src",
     "typecheck": "tsc -b --force",
-    "render:sheets": "vite build --config vite.ssr.config.ts && node scripts/dist/render-sheet.js"
+    "render:sheets": "vite build --config vite.ssr.config.ts && node scripts/dist/render-sheet.js",
+    "screenshots": "node scripts/screenshot-app.mjs"
   },
   "dependencies": {
     "jspdf": "^4.2.1",

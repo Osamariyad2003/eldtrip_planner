@@ -22,7 +22,16 @@ export class ApiError extends Error {
 }
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
+  // The timeout needs a signal of its own, so a caller's signal is chained onto
+  // it rather than replaced — otherwise an aborted request keeps running and a
+  // late response can still land on a caller that has moved on.
   const controller = new AbortController()
+  const caller = init?.signal ?? null
+  const onCallerAbort = () => controller.abort()
+  if (caller) {
+    if (caller.aborted) controller.abort()
+    else caller.addEventListener('abort', onCallerAbort, { once: true })
+  }
   const timer = window.setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS)
 
   let response: Response
@@ -33,6 +42,9 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
       headers: { 'Content-Type': 'application/json', ...(init?.headers ?? {}) },
     })
   } catch (cause) {
+    // A caller-initiated abort is that caller's business: rethrow it so an
+    // `AbortError` check still works, instead of reporting a dead server.
+    if (caller?.aborted) throw cause
     const aborted = cause instanceof DOMException && cause.name === 'AbortError'
     throw new ApiError(
       'network_error',
@@ -40,7 +52,10 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
     )
   } finally {
     window.clearTimeout(timer)
+    caller?.removeEventListener('abort', onCallerAbort)
   }
+
+  if (caller?.aborted) throw new DOMException('Aborted', 'AbortError')
 
   const requestId = response.headers.get('X-Request-ID') ?? ''
   if (!response.ok) {

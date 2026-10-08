@@ -26,6 +26,9 @@ export interface Instruction {
   text: string
   distance_mi: number
   duration_min: number
+  /** Where the manoeuvre happens; null when the provider did not report it. */
+  lat: number | null
+  lng: number | null
 }
 
 export interface RouteLeg {

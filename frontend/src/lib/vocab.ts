@@ -1,7 +1,6 @@
 /** Shared labels, colours and marker shapes for stops and duty statuses.
- *
- * FR-MAP-02 requires icons that differ in shape, not only colour, so each
- * stop kind carries both a hue and a distinct glyph.
+ * Samsara Enterprise Design Tokens: Daintree Navy #00263E, Cyan #00A3C4, Emerald #059669.
+ * FMCSA Official Duty Status Tokens: OFF #64748B, SB #6366F1, D #059669, ON #D97706.
  */
 
 import type { DutyStatus, EventKind } from './types'
@@ -22,33 +21,39 @@ export const STATUS_SHORT: Record<DutyStatus, string> = {
   on_duty: 'ON',
 }
 
+/** FMCSA Official Duty Status Brand Colors */
+export const STATUS_COLOR: Record<DutyStatus, string> = {
+  off_duty: '#64748B',      // OFF (Off Duty): Slate Gray #64748B
+  sleeper_berth: '#6366F1', // SB (Sleeper Berth): Indigo #6366F1
+  driving: '#059669',       // D (Driving): Emerald Green #059669
+  on_duty: '#D97706',       // ON (On Duty Not Driving): Amber #D97706
+}
+
 export interface StopStyle {
   label: string
   color: string
-  /** A single glyph, so markers are distinguishable without colour. */
   glyph: string
   shape: 'circle' | 'square' | 'diamond' | 'triangle' | 'pin'
 }
 
 export const STOP_STYLE: Record<string, StopStyle> = {
-  start: { label: 'Trip start', color: '#1e6f3f', glyph: 'S', shape: 'pin' },
-  pre_trip: { label: 'Pre-trip inspection', color: '#1e6f3f', glyph: 'S', shape: 'pin' },
-  pickup: { label: 'Pickup', color: '#1f5fa8', glyph: 'P', shape: 'square' },
-  dropoff: { label: 'Dropoff', color: '#7a2d8f', glyph: 'D', shape: 'diamond' },
-  fuel: { label: 'Fuel stop', color: '#b4620a', glyph: 'F', shape: 'triangle' },
-  break: { label: '30-min break', color: '#8a6d00', glyph: 'B', shape: 'circle' },
-  rest_10: { label: '10-hr rest', color: '#3a4a9e', glyph: 'R', shape: 'circle' },
-  restart_34: { label: '34-hr restart', color: '#a01f36', glyph: '34', shape: 'circle' },
-  post_trip: { label: 'Post-trip inspection', color: '#1e6f3f', glyph: 'E', shape: 'pin' },
-  off: { label: 'Off duty', color: '#5b6470', glyph: 'O', shape: 'circle' },
-  drive: { label: 'Driving', color: '#2f6f4f', glyph: '>', shape: 'circle' },
+  start: { label: 'Trip Start', color: '#00263E', glyph: '🚀', shape: 'pin' },
+  pre_trip: { label: 'Pre-trip Inspection', color: '#059669', glyph: '📋', shape: 'pin' },
+  pickup: { label: 'Pickup (1h Loading)', color: '#FFC700', glyph: '📦', shape: 'square' },
+  dropoff: { label: 'Dropoff (1h Unloading)', color: '#E11D48', glyph: '🎯', shape: 'diamond' },
+  fuel: { label: 'Fuel Stop (≤1,000 mi)', color: '#FFC700', glyph: '⛽', shape: 'triangle' },
+  break: { label: '30-min Break', color: '#059669', glyph: '☕', shape: 'circle' },
+  rest_10: { label: '10-hr Rest', color: '#6366F1', glyph: '🌙', shape: 'circle' },
+  restart_34: { label: '34-hr Restart', color: '#DC2626', glyph: '34', shape: 'circle' },
+  post_trip: { label: 'Post-trip Inspection', color: '#059669', glyph: '✅', shape: 'pin' },
+  off: { label: 'Off Duty', color: '#64748B', glyph: 'O', shape: 'circle' },
+  drive: { label: 'Driving', color: '#059669', glyph: '>', shape: 'circle' },
 }
 
 export function stopStyle(kind: EventKind | string): StopStyle {
   return STOP_STYLE[kind] ?? STOP_STYLE.off
 }
 
-/** Hours as the log sheet reads them: one or two decimals, no trailing zeros. */
 export function formatHours(hours: number): string {
   const rounded = Math.round(hours * 100) / 100
   return Number.isInteger(rounded) ? String(rounded) : rounded.toFixed(2).replace(/0$/, '')
@@ -58,7 +63,6 @@ export function formatMiles(miles: number): string {
   return miles.toLocaleString('en-US', { maximumFractionDigits: 1 })
 }
 
-/** Minutes from midnight as HH:MM, with 1,440 shown as 24:00. */
 export function minuteToClock(minute: number): string {
   if (minute >= 1440) return '24:00'
   const h = Math.floor(minute / 60)
@@ -66,13 +70,6 @@ export function minuteToClock(minute: number): string {
   return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`
 }
 
-/**
- * An ISO timestamp's wall-clock time, read exactly as the server sent it.
- *
- * The plan is already expressed in the log time zone (API-04), so the offset
- * in the string is authoritative and must not be re-interpreted in the
- * browser's local zone.
- */
 export function clockFromIso(iso: string): string {
   const match = /T(\d{2}):(\d{2})/.exec(iso)
   return match ? `${match[1]}:${match[2]}` : ''
@@ -82,7 +79,6 @@ export function dateFromIso(iso: string): string {
   return iso.slice(0, 10)
 }
 
-/** "Mon 3 Mar" for tabs and popups, from a plain YYYY-MM-DD date. */
 export function formatDate(isoDate: string): string {
   const [y, m, d] = isoDate.split('-').map(Number)
   const date = new Date(Date.UTC(y, m - 1, d))

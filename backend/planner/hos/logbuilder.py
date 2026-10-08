@@ -11,7 +11,7 @@ calls out.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import date, datetime, timedelta
+from datetime import UTC, date, datetime, timedelta
 
 from .config import DEFAULT_CONFIG, HosConfig
 from .types import (
@@ -99,17 +99,26 @@ def build_daily_logs(
 
     day_zero = events[0].start.replace(hour=0, minute=0, second=0, microsecond=0)
     # FR-LOG-02: split any event crossing midnight at 00:00, keeping its kind.
-    per_day: dict[int, list[tuple[DutyEvent, int, int]]] = {}
+    # Each piece carries the event's own full length on this clock, so that
+    # mileage can be prorated without reaching for the engine's real-time
+    # minutes (see _prorated_miles).
+    per_day: dict[int, list[tuple[DutyEvent, int, int, int]]] = {}
     for event in events:
         start_abs = _minutes_since(day_zero, event.start)
         end_abs = _minutes_since(day_zero, event.end)
+        span = end_abs - start_abs
         cursor = start_abs
         while cursor < end_abs:
             day = cursor // MINUTES_PER_DAY
             day_end = (day + 1) * MINUTES_PER_DAY
             piece_end = min(end_abs, day_end)
             per_day.setdefault(day, []).append(
-                (event, cursor - day * MINUTES_PER_DAY, piece_end - day * MINUTES_PER_DAY)
+                (
+                    event,
+                    cursor - day * MINUTES_PER_DAY,
+                    piece_end - day * MINUTES_PER_DAY,
+                    span,
+                )
             )
             cursor = piece_end
 
@@ -120,7 +129,8 @@ def build_daily_logs(
 
     for day_index in range(max(per_day) + 1):
         pieces = per_day.get(day_index, [])
-        day_date = (day_zero + timedelta(days=day_index)).date()
+        day_midnight = day_zero + timedelta(days=day_index)
+        day_date = day_midnight.date()
         segments = _segments_for_day(pieces)
         totals = _totals(segments)
 
@@ -131,20 +141,27 @@ def build_daily_logs(
 
         # FR-LOG-05: miles driven today.
         miles_today = sum(
-            _prorated_miles(event, start, end) for event, start, end in pieces
+            _prorated_miles(event, start, end, span) for event, start, end, span in pieces
         )
         total_miles_assigned += miles_today
 
-        day_on_duty = _quarter(totals[DRIVING] + totals[ON_DUTY])
+        # The grid above is a wall-clock document: 24 columns, midnight to
+        # midnight, whatever the clock did in between. The recap is not - the
+        # 70-hour cycle counts hours a clock measured (BR-LOG-02/03), so on the
+        # two days a year that are 23 or 25 hours long the two disagree and
+        # only real elapsed time may feed the cycle.
+        day_on_duty = _quarter(_on_duty_hours(pieces, day_midnight))
         restart_taken = any(
             event.kind == "restart_34" and end > start and end <= MINUTES_PER_DAY
             and _ends_today(event, day_zero, day_index)
-            for event, start, end in pieces
+            for event, start, end, _span in pieces
         )
         if restart_taken:
             # BR-LOG-03: after a restart, A counts only hours since it ended.
             cycle_at_base = 0.0
-            cumulative_on_duty = _on_duty_after_restart(pieces, day_zero, day_index)
+            cumulative_on_duty = _on_duty_after_restart(
+                pieces, day_zero, day_index, day_midnight
+            )
         else:
             cumulative_on_duty += day_on_duty
 
@@ -187,20 +204,30 @@ def _ends_today(event: DutyEvent, day_zero: datetime, day_index: int) -> bool:
     return day_index * MINUTES_PER_DAY < end_abs <= (day_index + 1) * MINUTES_PER_DAY
 
 
-def _prorated_miles(event: DutyEvent, start: int, end: int) -> float:
-    """The share of an event's miles falling in one day's slice of it."""
-    if not event.is_drive or event.duration_min <= 0:
+def _prorated_miles(event: DutyEvent, start: int, end: int, span_min: int) -> float:
+    """The share of an event's miles falling in one day's slice of it.
+
+    ``span_min`` is the event's length on the sheet's own clock, which is the
+    same clock ``start`` and ``end`` are measured on. It is not
+    ``event.duration_min``: that counts real elapsed minutes, and across a
+    daylight-saving change the two differ by an hour, which would hand that
+    hour's miles to the wrong day (or invent them).
+    """
+    if not event.is_drive or span_min <= 0:
         return 0.0
-    return event.miles * (end - start) / event.duration_min
+    return event.miles * (end - start) / span_min
 
 
-def _segments_for_day(pieces: list[tuple[DutyEvent, int, int]]) -> list[LogSegment]:
+def _segments_for_day(pieces: list[tuple[DutyEvent, int, int, int]]) -> list[LogSegment]:
     """Grid segments covering 0-1,440 minutes exactly (FR-LOG-03).
 
     Pads with OFF before the first event and after the last, and merges
     adjacent same-status runs so the drawn line has one step per real change.
     """
-    raw = [LogSegment(event.status, start, end, event.kind) for event, start, end in pieces]
+    raw = [
+        LogSegment(event.status, start, end, event.kind)
+        for event, start, end, _span in pieces
+    ]
     raw.sort(key=lambda s: s.start_min)
 
     filled: list[LogSegment] = []
@@ -230,11 +257,11 @@ def _totals(segments: list[LogSegment]) -> dict[str, float]:
     return totals
 
 
-def _remarks_for_day(pieces: list[tuple[DutyEvent, int, int]]) -> list[Remark]:
+def _remarks_for_day(pieces: list[tuple[DutyEvent, int, int, int]]) -> list[Remark]:
     """FR-LOG-06: one remark per change of duty status, merged by minute."""
     by_minute: dict[int, Remark] = {}
     previous_status: str | None = None
-    for event, start, _end in sorted(pieces, key=lambda p: p[1]):
+    for event, start, _end, _span in sorted(pieces, key=lambda p: p[1]):
         if event.status != previous_status:
             existing = by_minute.get(start)
             if existing is None:
@@ -265,16 +292,43 @@ def _brackets(segments: list[LogSegment]) -> list[Bracket]:
     return [b for b in brackets if b.end_min > b.start_min]
 
 
+def _on_duty_hours(
+    pieces: list[tuple[DutyEvent, int, int, int]], day_midnight: datetime
+) -> float:
+    """ON + D hours on this day, measured as a clock measures them."""
+    return sum(
+        _real_hours(day_midnight, start, end)
+        for event, start, end, _span in pieces
+        if event.status in (DRIVING, ON_DUTY)
+    )
+
+
 def _on_duty_after_restart(
-    pieces: list[tuple[DutyEvent, int, int]], day_zero: datetime, day_index: int
+    pieces: list[tuple[DutyEvent, int, int, int]],
+    day_zero: datetime,
+    day_index: int,
+    day_midnight: datetime,
 ) -> float:
     """ON + D hours on this day that fall after the restart ended."""
     restart_end = 0
-    for event, _start, end in pieces:
+    for event, _start, end, _span in pieces:
         if event.kind == "restart_34" and _ends_today(event, day_zero, day_index):
             restart_end = max(restart_end, end)
     hours = 0.0
-    for event, start, end in pieces:
+    for event, start, end, _span in pieces:
         if event.status in (DRIVING, ON_DUTY) and end > restart_end:
-            hours += (end - max(start, restart_end)) / 60.0
+            hours += _real_hours(day_midnight, max(start, restart_end), end)
     return _quarter(hours)
+
+
+def _real_hours(day_midnight: datetime, start: int, end: int) -> float:
+    """Elapsed hours between two wall-clock minutes of one local day.
+
+    Equal to ``(end - start) / 60`` on all but the two days a year that gain
+    or lose an hour.
+    """
+    if end <= start:
+        return 0.0
+    first = (day_midnight + timedelta(minutes=start)).astimezone(UTC)
+    last = (day_midnight + timedelta(minutes=end)).astimezone(UTC)
+    return (last - first).total_seconds() / 3600

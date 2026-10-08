@@ -81,7 +81,11 @@ def plan_trip(data: dict, config: HosConfig | None = None) -> dict:
         raise ScheduleFailed() from exc
 
     # 6. Name every event's location (FR-GEO-03), then build the log sheets.
-    _label_events(events, current, pickup, dropoff)
+    if _label_events(events, current, pickup, dropoff):
+        notices.append(
+            "Some stop locations are shown as coordinates; place names were "
+            "unavailable."
+        )
     header = _header(data, current, pickup, dropoff)
     try:
         daily_logs = build_daily_logs(events, header, data["cycle_used_hr"], cfg)
@@ -92,7 +96,7 @@ def plan_trip(data: dict, config: HosConfig | None = None) -> dict:
     _fill_day_endpoints(daily_logs, events)
 
     return {
-        "summary": _summary(events, route, zone_name, start),
+        "summary": _summary(events, route, zone_name, start, len(daily_logs)),
         "route": {
             "geometry": [
                 [round(lat, 5), round(lng, 5)] for lat, lng in route.combined_geometry()
@@ -128,13 +132,20 @@ def _label_events(
     current: geocoding.Place,
     pickup: geocoding.Place,
     dropoff: geocoding.Place,
-) -> None:
+) -> bool:
     """FR-GEO-03: give each duty-status change a "City, ST" location.
 
     The three trip endpoints are already known, so only the interpolated stop
-    points need a reverse lookup - and those are cached and rounded to 3
-    decimals, so repeat trips make no provider call.
+    points need a reverse lookup. Those are resolved in one batch: distinct
+    points are asked for once, the batch spends a bounded number of provider
+    calls, and the cache (keyed to 3 decimals) means a repeated trip asks for
+    nothing at all.
+
+    Returns True when at least one point had to fall back to coordinates, so
+    the caller can say so in the plan's notices.
     """
+    needs_lookup: dict[tuple[float, float], list[DutyEvent]] = {}
+
     for event in events:
         if event.kind == "pickup":
             event.location = pickup.city_state
@@ -147,10 +158,19 @@ def _label_events(
             event.lat = event.lat if event.lat is not None else current.lat
             event.lng = event.lng if event.lng is not None else current.lng
         elif event.lat is not None and event.lng is not None:
-            event.location = geocoding.reverse(event.lat, event.lng)
+            needs_lookup.setdefault((event.lat, event.lng), []).append(event)
         else:
             event.location = current.city_state
             event.lat, event.lng = current.lat, current.lng
+
+    if not needs_lookup:
+        return False
+
+    batch = geocoding.reverse_many(list(needs_lookup))
+    for point, point_events in needs_lookup.items():
+        for event in point_events:
+            event.location = batch.labels[point]
+    return batch.degraded
 
 
 # -- defaults and header ---------------------------------------------------
@@ -220,7 +240,13 @@ def _assumptions(cfg: HosConfig) -> list[str]:
 # -- response shaping ------------------------------------------------------
 
 
-def _summary(events: list[DutyEvent], route, zone_name: str, start: datetime) -> dict:
+def _summary(
+    events: list[DutyEvent],
+    route,
+    zone_name: str,
+    start: datetime,
+    num_days: int,
+) -> dict:
     driving = sum(e.duration_hr for e in events if e.status == DRIVING)
     on_duty = sum(e.duration_hr for e in events if e.status == ON_DUTY)
     # The trailing off-duty padding is not part of the working trip.
@@ -233,7 +259,10 @@ def _summary(events: list[DutyEvent], route, zone_name: str, start: datetime) ->
         "trip_start": start.isoformat(),
         "trip_end": trip_end.isoformat(),
         "total_elapsed_hours": round((trip_end - start).total_seconds() / 3600, 2),
-        "num_days": len({e.start.date() for e in events}),
+        # FR-UI-06: the count shown must be the number of sheets FR-LOG-01
+        # produced. Counting distinct event start dates undercounts a calendar
+        # day swallowed whole by a 34-hour restart, which still gets a sheet.
+        "num_days": num_days,
         "num_fuel_stops": sum(1 for e in events if e.kind == "fuel"),
         "num_rests": sum(1 for e in events if e.kind == "rest_10"),
         "num_restarts": sum(1 for e in events if e.kind == "restart_34"),

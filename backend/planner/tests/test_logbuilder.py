@@ -82,7 +82,9 @@ def test_ac05_schneider_reference_day():
 
 
 def test_ac05_brackets_are_maximal_non_driving_runs():
-    segments = _segments_for_day([(e, e.start_min, e.end_min) for e in schneider_day()])
+    segments = _segments_for_day(
+        [(e, e.start_min, e.end_min, e.duration_min) for e in schneider_day()]
+    )
     assert [(b.start_min, b.end_min) for b in _brackets(segments)] == [
         (0, 390),       # off duty and the pre-trip, one stationary run
         (690, 720),     # the 30-minute break
@@ -125,7 +127,7 @@ def test_remarks_at_the_same_minute_merge():
 
 def test_segments_cover_the_day_exactly():
     """FR-LOG-03: padding to 0 and 1,440 minutes."""
-    segments = _segments_for_day([(event(DRIVING, "drive", 480, 600), 480, 600)])
+    segments = _segments_for_day([(event(DRIVING, "drive", 480, 600), 480, 600, 120)])
     assert segments[0].start_min == 0 and segments[-1].end_min == 1440
     assert all(a.end_min == b.start_min for a, b in zip(segments, segments[1:], strict=False))
     assert sum(s.end_min - s.start_min for s in segments) == 1440

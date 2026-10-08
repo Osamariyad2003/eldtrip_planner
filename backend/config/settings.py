@@ -6,6 +6,7 @@ Production hardening per NFR-SEC-01..05; environment variables per DEP-01.
 from __future__ import annotations
 
 from pathlib import Path
+from secrets import token_urlsafe
 
 import environ
 
@@ -24,7 +25,12 @@ env = environ.Env(
 )
 environ.Env.read_env(BASE_DIR / ".env")
 
-SECRET_KEY = env("SECRET_KEY", default="dev-only-insecure-key-change-me")
+# NFR-SEC-04: no shared fallback secret. A published default would become the
+# signing key of every deployment that forgets to set SECRET_KEY, so an unset
+# key yields a random per-process one instead: it carries the
+# "django-insecure-" prefix that `manage.py check --deploy` fails on, and it is
+# never a value an attacker can look up in this repository.
+SECRET_KEY = env("SECRET_KEY", default="") or f"django-insecure-{token_urlsafe(50)}"
 DEBUG = env("DEBUG")
 ALLOWED_HOSTS = env("ALLOWED_HOSTS")
 
@@ -48,6 +54,11 @@ MIDDLEWARE = [
 # No CSRF middleware: the API is stateless and unauthenticated, sets no
 # cookies and uses no session, so there is no ambient credential for a
 # cross-site request to ride on. Cross-origin access is limited by API-06.
+#
+# That decision is silenced explicitly so the deployment check can run at
+# --fail-level WARNING in CI: an accepted warning is recorded here once,
+# instead of every other warning being ignored along with it.
+SILENCED_SYSTEM_CHECKS = ["security.W003"]
 
 ROOT_URLCONF = "config.urls"
 WSGI_APPLICATION = "config.wsgi.application"

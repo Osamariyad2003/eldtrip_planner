@@ -1,10 +1,14 @@
-/** The Daily Logs tab: day tabs, prev/next, PDF and print (FR-UI-06, FR-EXP). */
+/**
+ * Interactive ELD Log Sheet View for Spotter LogMaster (Right Panel).
+ * Features multi-day horizontal tabs, real-time FMCSA duty status breakdown cards,
+ * PDF export, and print action triggers.
+ */
 
 import { useCallback, useRef, useState } from 'react'
 
 import { exportLogsToPdf, pdfFilename } from '../lib/pdf'
 import type { TripPlan } from '../lib/types'
-import { formatDate, formatHours } from '../lib/vocab'
+import { STATUS_COLOR, formatDate, formatHours } from '../lib/vocab'
 import { LogSheet } from './LogSheet'
 
 interface Props {
@@ -19,8 +23,6 @@ export function LogView({ plan, onToast }: Props) {
   const sheetHost = useRef<HTMLDivElement>(null)
   const tabRefs = useRef<Array<HTMLButtonElement | null>>([])
 
-  // A new plan can have fewer days than the one before it, so the visible day
-  // is clamped during render rather than corrected in an effect afterwards.
   const day = Math.min(selectedDay, logs.length - 1)
   const setDay = setSelectedDay
   const current = logs[day]
@@ -36,13 +38,12 @@ export function LogView({ plan, onToast }: Props) {
     try {
       await exportLogsToPdf(sheets, pdfFilename(logs[0].date, logs.length))
     } catch {
-      onToast('PDF export failed. You can still use Print.')
+      onToast('PDF export failed. You can still use Print Inspection Sheet.')
     } finally {
       setExporting(false)
     }
   }, [logs, onToast])
 
-  // Keyboard support for the tab list (NFR-ACC-01).
   const onTabKeyDown = (event: React.KeyboardEvent, index: number) => {
     const last = logs.length - 1
     let next: number | null = null
@@ -58,9 +59,11 @@ export function LogView({ plan, onToast }: Props) {
   }
 
   return (
-    <div className="log-view">
-      <div className="log-toolbar no-print">
-        <div className="log-tabs" role="tablist" aria-label="Log sheet days">
+    <div className="log-view-panel">
+      {/* Top Controls Toolbar */}
+      <div className="log-view-header no-print">
+        {/* Multi-day Horizontal Tabs */}
+        <div className="log-day-tabs-container" role="tablist" aria-label="Daily Log Sheets">
           {logs.map((log, index) => (
             <button
               key={log.date}
@@ -73,59 +76,89 @@ export function LogView({ plan, onToast }: Props) {
               aria-selected={index === day}
               aria-controls={`day-panel-${index}`}
               tabIndex={index === day ? 0 : -1}
-              className={`log-tab${index === day ? ' is-active' : ''}`}
+              className={`log-day-tab${index === day ? ' is-active' : ''}`}
               onClick={() => setDay(index)}
               onKeyDown={(event) => onTabKeyDown(event, index)}
             >
-              <span className="log-tab-day">Day {index + 1}</span>
-              <span className="log-tab-date">{formatDate(log.date)}</span>
+              <span className="tab-day-number font-mono">Day {index + 1}</span>
+              <span className="tab-day-date font-mono">{formatDate(log.date)}</span>
             </button>
           ))}
         </div>
-        <div className="log-actions">
+
+        {/* Action Buttons */}
+        <div className="log-view-actions">
           <button
             type="button"
-            className="button-ghost"
+            className="button-ghost compact"
             onClick={() => setDay((d) => Math.max(0, d - 1))}
             disabled={day === 0}
-            aria-label="Previous day"
+            aria-label="Previous Day"
           >
             ◀ Prev
           </button>
           <button
             type="button"
-            className="button-ghost"
+            className="button-ghost compact"
             onClick={() => setDay((d) => Math.min(logs.length - 1, d + 1))}
             disabled={day >= logs.length - 1}
-            aria-label="Next day"
+            aria-label="Next Day"
           >
             Next ▶
           </button>
-          <button type="button" className="button-primary compact" onClick={onPdf} disabled={exporting}>
+          <button
+            type="button"
+            className="button-primary compact"
+            onClick={onPdf}
+            disabled={exporting}
+          >
             {exporting && <span className="button-spinner" aria-hidden="true" />}
-            {exporting ? 'Building PDF…' : 'Download PDF'}
+            <span>{exporting ? 'Building PDF…' : '📄 Export Daily Log as PDF'}</span>
           </button>
-          <button type="button" className="button-ghost" onClick={() => window.print()}>
-            Print
+          <button
+            type="button"
+            className="button-ghost compact"
+            onClick={() => window.print()}
+          >
+            🖨️ Print Inspection Sheet
           </button>
         </div>
       </div>
 
-      <div className="log-day-summary no-print">
-        <strong>{formatDate(current.date)}</strong>
-        <span>
-          Off {formatHours(current.totals.off_duty)} · SB {formatHours(current.totals.sleeper_berth)} ·
-          Driving {formatHours(current.totals.driving)} · On duty{' '}
-          {formatHours(current.totals.on_duty)}
-        </span>
-        <span>{current.miles_today.toLocaleString('en-US')} mi driven</span>
+      {/* FMCSA Real-Time Duty Status Summary Bar */}
+      <div className="log-status-summary-bar no-print font-mono">
+        <div className="status-chip" style={{ borderColor: `${STATUS_COLOR.off_duty}40` }}>
+          <span className="status-chip-dot" style={{ backgroundColor: STATUS_COLOR.off_duty }} />
+          <span className="status-chip-name">OFF:</span>
+          <span className="status-chip-val">{formatHours(current.totals.off_duty)}h</span>
+        </div>
+
+        <div className="status-chip" style={{ borderColor: `${STATUS_COLOR.sleeper_berth}40` }}>
+          <span className="status-chip-dot" style={{ backgroundColor: STATUS_COLOR.sleeper_berth }} />
+          <span className="status-chip-name">SB:</span>
+          <span className="status-chip-val">{formatHours(current.totals.sleeper_berth)}h</span>
+        </div>
+
+        <div className="status-chip" style={{ borderColor: `${STATUS_COLOR.driving}40` }}>
+          <span className="status-chip-dot" style={{ backgroundColor: STATUS_COLOR.driving }} />
+          <span className="status-chip-name">D:</span>
+          <span className="status-chip-val">{formatHours(current.totals.driving)}h</span>
+        </div>
+
+        <div className="status-chip" style={{ borderColor: `${STATUS_COLOR.on_duty}40` }}>
+          <span className="status-chip-dot" style={{ backgroundColor: STATUS_COLOR.on_duty }} />
+          <span className="status-chip-name">ON:</span>
+          <span className="status-chip-val">{formatHours(current.totals.on_duty)}h</span>
+        </div>
+
+        <div className="status-chip-miles">
+          <span>Miles Today:</span>
+          <strong>{current.miles_today.toLocaleString('en-US')} mi</strong>
+        </div>
       </div>
 
-      {/*
-        Every day is mounted so the PDF export and Print can reach all of
-        them; only the selected one is visible on screen.
-      */}
-      <div className="log-sheets" ref={sheetHost}>
+      {/* Rendered Log Sheets Host */}
+      <div className="log-sheets-viewport" ref={sheetHost}>
         {logs.map((log, index) => (
           <div
             key={log.date}

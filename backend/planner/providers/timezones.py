@@ -7,6 +7,8 @@ carries a notice.
 
 from __future__ import annotations
 
+import atexit
+import gc
 import logging
 from zoneinfo import ZoneInfo
 
@@ -23,6 +25,22 @@ def _get_finder():
 
         _finder = TimezoneFinder()
     return _finder
+
+
+@atexit.register
+def _release_finder() -> None:
+    """Drop the finder while the interpreter is still healthy.
+
+    timezonefinder 7.0.2's ``PolygonArray.__del__`` reaches for a module global
+    that is already cleared during interpreter shutdown, so letting it be
+    collected there prints an ignored AttributeError traceback. Collecting it
+    here runs the same destructor early, when the global is still bound.
+    """
+    global _finder
+    if _finder is None:
+        return
+    _finder = None
+    gc.collect()
 
 
 def zone_for(lat: float, lng: float) -> tuple[ZoneInfo, str, bool]:

@@ -25,6 +25,9 @@ frontend/sheet-output/
 frontend/scripts/dist/
 frontend/plan-sample.json
 
+# Generated locally by npm run screenshots
+frontend/screenshots/
+
 # Editors / OS
 .vscode/
 .idea/
