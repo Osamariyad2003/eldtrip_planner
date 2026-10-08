@@ -3,12 +3,12 @@ fly.toml
 
 # Secrets. .env holds the real provider key; COPY . /code would bake it into an
 # image layer, where anyone who can pull the image can read it. Provider keys
-# are set as Fly secrets instead (FR-SYS-02, NFR-SEC-02).
+# are Fly secrets instead (FR-SYS-02, NFR-SEC-02).
 .env
 .env.*
 
-# The local virtualenv is ~250 MB of Linux-incompatible Windows binaries; the
-# image installs its own from requirements.txt.
+# The local virtualenv is ~250 MB of Windows binaries that would not run in the
+# image anyway; it installs its own from requirements.txt.
 .venv/
 
 # Local database and caches, all regenerated.
