@@ -33,3 +33,5 @@ frontend/screenshots/
 .idea/
 .DS_Store
 Thumbs.db
+
+.vercel
