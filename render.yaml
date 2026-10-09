@@ -23,8 +23,11 @@ services:
       - key: ALLOWED_HOSTS
         value: eld-trip-planner-api.onrender.com
       - key: CORS_ALLOWED_ORIGINS
-        # Set to the deployed frontend origin, plus the local dev server (API-06).
-        value: http://localhost:5173
+        # The deployed frontend origins, plus the local dev server (API-06).
+        value: https://eldtrip-planner.vercel.app,https://eldtrip-planner-osamariyad2003s-projects.vercel.app,http://localhost:5173
+      - key: CORS_ALLOWED_ORIGIN_REGEXES
+        # Vercel preview deployments get a per-deploy hostname.
+        value: ^https://eldtrip-planner-[a-z0-9]+-osamariyad2003s-projects\.vercel\.app$
       - key: ORS_API_KEY
         sync: false
       - key: NOMINATIM_USER_AGENT

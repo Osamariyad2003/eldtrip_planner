@@ -3,14 +3,17 @@
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = 'elp-trip-withered-stone-5393'
+app = 'elp-trip'
 primary_region = 'fra'
 console_command = '/code/manage.py shell'
 
 [build]
 [env]
   ALLOWED_HOSTS = 'elp-trip.fly.dev'
-  CORS_ALLOWED_ORIGINS = 'http://localhost:5173'
+  # API-06: the Vercel production aliases plus the local dev server. Preview
+  # deployments get a per-deploy hostname, matched by the regex below.
+  CORS_ALLOWED_ORIGINS = 'https://eldtrip-planner.vercel.app,https://eldtrip-planner-osamariyad2003s-projects.vercel.app,https://eldtrip-planner-git-main-osamariyad2003s-projects.vercel.app,http://localhost:5173'
+  CORS_ALLOWED_ORIGIN_REGEXES = '^https://eldtrip-planner-[a-z0-9]+-osamariyad2003s-projects\.vercel\.app$'
   DEBUG = 'False'
   NOMINATIM_USER_AGENT = 'eld-trip-planner/1.0 (+https://elp-trip.fly.dev)'
   PORT = '8000'

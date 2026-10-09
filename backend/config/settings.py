@@ -16,6 +16,7 @@ env = environ.Env(
     DEBUG=(bool, False),
     ALLOWED_HOSTS=(list, ["localhost", "127.0.0.1"]),
     CORS_ALLOWED_ORIGINS=(list, ["http://localhost:5173"]),
+    CORS_ALLOWED_ORIGIN_REGEXES=(list, []),
     ORS_API_KEY=(str, ""),
     NOMINATIM_USER_AGENT=(str, "eld-trip-planner/1.0 (+https://github.com/)"),
     APP_VERSION=(str, "1.0.0"),
@@ -112,6 +113,11 @@ REST_FRAMEWORK = {
 
 # API-06: only the production frontend origin and the local dev server.
 CORS_ALLOWED_ORIGINS = env("CORS_ALLOWED_ORIGINS")
+
+# Vercel gives every preview deployment its own hostname, so a preview build
+# can only reach the API through a pattern. Empty by default: an unset value
+# allows nothing beyond CORS_ALLOWED_ORIGINS above.
+CORS_ALLOWED_ORIGIN_REGEXES = env("CORS_ALLOWED_ORIGIN_REGEXES")
 CORS_ALLOW_CREDENTIALS = False
 
 # API-05
